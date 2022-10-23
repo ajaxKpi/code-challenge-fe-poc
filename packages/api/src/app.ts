@@ -22,7 +22,7 @@ app.use('/docs', serve, setup(swaggerDocument));
 app.post('/login', AuthController.login);
 app.get('/users', tokenParserMiddleware, UsersController.getUsers);
 app.get('/sme-data', tokenParserMiddleware, SmesController.getSme);
-app.get(
+app.post(
   '/transactions',
   tokenParserMiddleware,
   TransactionsController.getTransactions
