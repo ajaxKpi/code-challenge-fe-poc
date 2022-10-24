@@ -7,13 +7,11 @@ import { Protected } from './shared/Protected';
 import { AuthApi } from './auth/api/AuthApi'
 
 function App() {
-    const [isAuthenticated, userHasAuthenticated] = useState(false);
     function checkAuth(){
         return !!AuthApi.getLoginToken()
     }
     return (
         <div className="App">
-            <Link to="/dashboard">About</Link>
             <Routes>
                 <Route path="/" element={<Navigate replace to="/dashboard"/>}/>
                 <Route

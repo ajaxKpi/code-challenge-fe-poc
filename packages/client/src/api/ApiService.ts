@@ -5,7 +5,6 @@ import { ServerError } from './DTOs';
 const api = axios.create({
     baseURL: 'http://localhost:3000',
     headers: {
-        withCredentials: true,
         responseType: "json",
         "Access-Control-Allow-Origin": '*',
     },

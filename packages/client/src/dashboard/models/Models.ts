@@ -9,11 +9,19 @@ export class TransactionFeedItem {
         rawTransactionItem?: TransactionItemResponse,
         public name = rawTransactionItem?.merchantName || '',
         public status = rawTransactionItem?.status || Status.COMPLETED,
+        public icon = rawTransactionItem?.merchantIconUrl || '',
+        public userID = rawTransactionItem?.userId || '',
+        public date = rawTransactionItem?.transactionTime || '',
         public currency = rawTransactionItem?.currency || Currency.EUR
         ) {
     }
 }
-export type TransactionSideInfo = Partial<TransactionFeedItem>; // TODO: Omit
+export type UserModel = {
+    image: string;
+    userName: string
+
+}
+export type TransactionSideInfo = Pick<TransactionFeedItem, 'date'| 'status'> & UserModel;
 
 export enum Status{
     REJECTED='REJECTED',

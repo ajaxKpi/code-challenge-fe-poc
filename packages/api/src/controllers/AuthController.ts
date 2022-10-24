@@ -11,17 +11,22 @@ const login = async (req: Request, res: Response) => {
   const INCORRECT_LOGIN = 'Incorrect login or password';
 
   const user = users.find((user) => user.email === email);
+  try {
+    if (!user) {
+      throw unauthorized(INCORRECT_LOGIN);
+    } else if (!compareSync(password, user.password)) {
+      throw unauthorized(INCORRECT_LOGIN);
+    } else {
+      const { password, ...userData } = user;
+      const token = jwt.sign({ userData }, SECRET_KEY, { expiresIn: '1y' });
 
-  if (!user) {
-    throw unauthorized(INCORRECT_LOGIN);
-  } else if (!compareSync(password, user.password)) {
-    throw unauthorized(INCORRECT_LOGIN);
-  } else {
-    const { password, ...userData } = user;
-    const token = jwt.sign({ userData }, SECRET_KEY, { expiresIn: '1y' });
-
-    res.status(200).json({ token });
+      res.status(200).json({ token });
+    }
   }
+  catch (err) {
+    res.status(403).json(err)
+  }
+
 };
 
 export const AuthController = {
