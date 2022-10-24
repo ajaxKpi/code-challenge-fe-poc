@@ -1,6 +1,5 @@
 import { sendGetRequest, sendPostRequest } from '../../api/ApiService';
 import { SMEDataResponse, SMEUsersResponse, TransactionItemResponse } from '../models/DTOs';
-import { AuthApi } from '../../auth/api/AuthApi';
 import { Status, TransactionFeedItem } from '../models/Models';
 import { UserDataStorage } from '../../UsersDataStorage';
 
@@ -29,7 +28,9 @@ export function getSmeTransactions(
     const body = {
         smeId
     }
-    return sendPostRequest<any,  {data: TransactionItemResponse[]}>('transactions', body,  params)
-        .then(rawTransactions=>rawTransactions.data)
-        .then(rawTransactions => rawTransactions.map(transaction=>new TransactionFeedItem(transaction)));
+    return sendPostRequest<
+        { smeId: string },
+        {data: TransactionItemResponse[] }>('transactions', body, params)
+        .then(rawTransactions => rawTransactions.data)
+        .then(rawTransactions => rawTransactions.map(transaction => new TransactionFeedItem(transaction)));
 }

@@ -1,10 +1,10 @@
 import * as React from 'react-router-dom';
-import { TransactionFeedItem, TransactionSideInfo } from '../models/Models';
+import { TransactionSideInfo } from '../models/Models';
 import { Avatar, Card, CardHeader, Chip, Drawer } from '@mui/material';
 import { red } from '@mui/material/colors';
 
 export interface SideBarProps {
-    selectedTransaction: TransactionSideInfo
+    selectedTransaction: TransactionSideInfo | undefined
     clearTransactionHandler: any
 }
 
@@ -15,13 +15,12 @@ export function SideBar(props: SideBarProps) {
         'align-items': 'center',
         'row-gap': '50px'
     }
-    console.log(props);
     return props.selectedTransaction ? <Drawer
             anchor='right'
             open={!!props.selectedTransaction?.userName}
             onClose={() => props.clearTransactionHandler(null)}
         >
-            <div style= {cardStyle} >
+            <div style={cardStyle}>
                 <Chip label={props.selectedTransaction.status} color="success" variant="outlined"/>
                 <Avatar
                     sx={{ bgcolor: red[500] }}

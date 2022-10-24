@@ -7,7 +7,7 @@ import { getCurrentUser, getSME, getSmeTransactions } from './api/SMEApi';
 import { SMEUsersResponse } from './models/DTOs';
 import { Status, TransactionFeedItem, TransactionSideInfo } from './models/Models';
 import { SelectControl } from '../shared/SelectControl';
-import { Box, CircularProgress } from '@mui/material';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import { UserDataStorage } from '../UsersDataStorage';
 
 export function Dashboard() {
@@ -18,17 +18,17 @@ export function Dashboard() {
     const [smeTransactions, handleSmeTransactions] = useState<TransactionFeedItem[]>([]);
     const [currentTransaction, handlerCurrentTransaction] = useState<TransactionSideInfo>();
     const [currentSelectedStatus, handlerSelectedStatus] = useState(Status.COMPLETED);
+    const [hasTransactionError, handlerHasTransactionError] = useState(false);
 
     function selectTransaction(selectedTransaction: TransactionFeedItem){
         const {status, userID, date} = selectedTransaction;
-        const formattedDate = date; // todo: format
         const {image, userName} = UserDataStorage.getUserDataById(userID);
             handlerCurrentTransaction(
                 {
                     image,
                     status,
                     userName,
-                    date: formattedDate
+                    date
                 }
             );
     }
@@ -40,7 +40,6 @@ export function Dashboard() {
 
     useEffect(() => {
         handleLoaderState(true)
-        // todo: called multiple times
         Promise.all([
             getSME(),
             getCurrentUser()
@@ -58,8 +57,10 @@ export function Dashboard() {
     useEffect(() => {
         if (currentUser.id) {
             handleLoaderState(true)
+            handlerHasTransactionError(false)
             getSmeTransactions(smeID, currentSelectedStatus)
                 .then(transactions => handleSmeTransactions(transactions))
+                .catch(err=>handlerHasTransactionError(true))
                 .finally(() => {
                     handleLoaderState(false)
                 })
@@ -74,17 +75,18 @@ export function Dashboard() {
                 ? <Box sx={{ display: 'flex' }}>
                     <CircularProgress/>
                 </Box>
-                : <div>
-                    <Transactions
-                        transactions={smeTransactions}
-                        selectTransaction={selectTransaction}>
-                    </Transactions>
-                    <SideBar
-                        selectedTransaction={currentTransaction}
-                        clearTransactionHandler={handlerCurrentTransaction}
-                    >
-                    </SideBar>
-                </div>
+                : hasTransactionError
+                    ? <Alert severity="error">Wrong email or password</Alert>
+                    : <div>
+                        <Transactions
+                            transactions={smeTransactions}
+                            selectTransaction={selectTransaction}/>
+
+                        <SideBar
+                            selectedTransaction={currentTransaction}
+                            clearTransactionHandler={handlerCurrentTransaction}
+                        />
+                    </div>
             }
         </div>
     );

@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Avatar, Icon, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { TransactionFeedItem } from '../models/Models';
+import { TransactionFeedItem, TransactionSideInfo } from '../models/Models';
 import { dateFormatter } from '../../shared/utils';
 
 export interface TransactionProps{
     transactions: TransactionFeedItem[];
-    selectTransaction: any;
+    selectTransaction: (item: TransactionFeedItem)=> void;
 }
 export function Transactions(props: TransactionProps) {
-    function onTableRowClick(_, row: TransactionFeedItem){
+    function onTableRowClick(event:unknown, row: TransactionFeedItem){
         props.selectTransaction(row)
 
     }    return (<TableContainer component={Paper}>

@@ -8,11 +8,11 @@ export class TransactionFeedItem {
     constructor(
         rawTransactionItem?: TransactionItemResponse,
         public name = rawTransactionItem?.merchantName || '',
-        public status = rawTransactionItem?.status || Status.COMPLETED,
+        public status = rawTransactionItem?.status,
         public icon = rawTransactionItem?.merchantIconUrl || '',
         public userID = rawTransactionItem?.userId || '',
         public date = rawTransactionItem?.transactionTime || '',
-        public currency = rawTransactionItem?.currency || Currency.EUR
+        public currency = rawTransactionItem?.currency
         ) {
     }
 }
@@ -31,6 +31,6 @@ export enum Status{
 }
 
 export enum Currency{
-    USD,
-    EUR
+    USD='$',
+    EUR='€'
 }
